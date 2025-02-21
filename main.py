@@ -57,6 +57,15 @@ class Calculator(QWidget):
             button = QPushButton(button_text)
             button.setMinimumSize(48, 48)
             button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+            button.setStyleSheet(f"""
+                QPushButton {{
+                        border: none;
+                        font-weight: bold;
+                        background-color: {'#1e1e2d' if button_text in OPERATIONS else 'none'}
+                    }}
+                QPushButton:pressed {{background-color: #f31d58;}}  
+                
+            """)
             if button_text not in ["C", "="]:
                 button.clicked.connect(self.number_or_operation_pressed)
             self.main_layout.addWidget(button, *button_position)
@@ -64,6 +73,7 @@ class Calculator(QWidget):
 
         self.buttons['C'].clicked.connect(self.clear_result)
         self.buttons['='].clicked.connect(self.compute_result)
+        self.buttons['='].setStyleSheet("background-color: #f31d58;")
 
         self.connect_keyboard_shorcut()
 
