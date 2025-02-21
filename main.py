@@ -27,6 +27,12 @@ class Calculator(QWidget):
         super().__init__()
         self.setWindowTitle("Calculatrice")
 
+        self.setStyleSheet("""
+            background-color: rgb(20,20,20);
+            color: rgb(220, 220, 220);
+            font-size: 18px;
+        """)
+
         self.buttons = {}
 
         self.main_layout = QGridLayout(self)
@@ -37,6 +43,14 @@ class Calculator(QWidget):
         self.le_result.setMinimumHeight(50)
         self.le_result.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
         self.le_result.setEnabled(False)
+        self.le_result.setStyleSheet("""
+            border: none;
+            border-bottom: 2px solid rgb(30, 30, 30);
+            padding: 0 8px;
+            font-size: 24px;
+            font-weight: bold;
+        """)
+
         self.main_layout.addWidget(self.le_result, 0, 0, 1, 4)
 
         for button_text, button_position in BUTTONS.items():
