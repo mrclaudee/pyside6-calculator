@@ -1,6 +1,6 @@
 from PySide6 import QtCore
 from PySide6.QtGui import QShortcut, QKeyEvent, QKeySequence
-from PySide6.QtWidgets import QApplication, QWidget, QGridLayout, QLineEdit, QPushButton
+from PySide6.QtWidgets import QApplication, QWidget, QGridLayout, QLineEdit, QPushButton, QSizePolicy
 
 BUTTONS = {"C": (1, 0, 1, 1),
            "/": (1, 3, 1, 1),
@@ -30,12 +30,19 @@ class Calculator(QWidget):
         self.buttons = {}
 
         self.main_layout = QGridLayout(self)
+        self.main_layout.setSpacing(0)
+        self.main_layout.setContentsMargins(0, 0, 0, 0)
+
         self.le_result = QLineEdit("0")
+        self.le_result.setMinimumHeight(50)
+        self.le_result.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
         self.le_result.setEnabled(False)
         self.main_layout.addWidget(self.le_result, 0, 0, 1, 4)
 
         for button_text, button_position in BUTTONS.items():
             button = QPushButton(button_text)
+            button.setMinimumSize(48, 48)
+            button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             if button_text not in ["C", "="]:
                 button.clicked.connect(self.number_or_operation_pressed)
             self.main_layout.addWidget(button, *button_position)
@@ -48,7 +55,7 @@ class Calculator(QWidget):
 
     @property
     def result(self):
-        return self.result
+        return self.le_result.text()
 
     def compute_result(self):
         try:
