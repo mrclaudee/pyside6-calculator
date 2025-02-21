@@ -20,7 +20,7 @@ BUTTONS = {"C": (1, 0, 1, 1),
            ".": (5, 2, 1, 1),
            "=": (5, 3, 1, 1)
            }
-
+OPERATIONS = ['+', '-', '/', 'x']
 
 class Calculator(QWidget):
     def __init__(self):
@@ -46,9 +46,13 @@ class Calculator(QWidget):
 
         self.connect_keyboard_shorcut()
 
+    @property
+    def result(self):
+        return self.result
+
     def compute_result(self):
         try:
-            result = eval(self.le_result.text().replace('x', '*'))
+            result = eval(self.result.replace('x', '*'))
         except SyntaxError:
             return
 
@@ -58,9 +62,19 @@ class Calculator(QWidget):
         self.le_result.setText("0")
 
     def number_or_operation_pressed(self):
-        if self.le_result.text() == "0":
+        if self.sender().text() in OPERATIONS:
+            if self.result[-1] in OPERATIONS or self.result == "0":
+                return
+
+        if self.result == "0":
             self.le_result.clear()
-        self.le_result.setText(self.le_result.text() + self.sender().text())
+        self.le_result.setText(self.result + self.sender().text())
+
+    def remove_last_character(self):
+        if len(self.result) > 1:
+            self.le_result.setText(self.result[:-1])
+        else:
+            self.le_result.setText("0")
 
     def connect_keyboard_shorcut(self):
         for button_text, button in self.buttons.items():
@@ -69,6 +83,7 @@ class Calculator(QWidget):
             QShortcut(QKeySequence(button_text), self, button.clicked.emit)
 
         QShortcut(QKeySequence(QtCore.Qt.Key.Key_Return), self, self.compute_result)
+        QShortcut(QKeySequence(QtCore.Qt.Key.Key_Backspace), self, self.remove_last_character)
 
 
 app = QApplication()
